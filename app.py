@@ -2,9 +2,11 @@ from __future__ import annotations
 
 from io import StringIO
 from pathlib import Path
+import json
 
 import pandas as pd
 import streamlit as st
+from sklearn.metrics import classification_report, f1_score
 
 from ml.data import load_csv, validate_input_frame
 from ml.inference import load_app_artifacts, predict_with_explanations
@@ -19,6 +21,16 @@ with st.sidebar:
     st.header("Artifacts")
     artifact_dir = st.text_input("Artifact directory", value="artifacts")
 
+    summary_path = Path(artifact_dir) / "train_summary.json"
+    if summary_path.exists():
+        try:
+            summary = json.loads(summary_path.read_text(encoding="utf-8"))
+            st.caption(
+                f"Trained model: {summary.get('best_model', '?')} | best val macro_f1: {summary.get('best_macro_f1', '?')}"
+            )
+        except Exception:
+            pass
+
     st.header("Input")
     uploaded = st.file_uploader("Upload CSV", type=["csv"])
 
@@ -26,6 +38,12 @@ with st.sidebar:
         "Use device dynamics (lag/delta features)",
         value=False,
         help="Only enable if the model was trained with --use-device-dynamics.",
+    )
+
+    show_probabilities = st.checkbox(
+        "Show per-class probabilities",
+        value=False,
+        help="Adds proba_* columns if the model supports predict_proba.",
     )
 
     top_deltas = st.slider("Top deltas to show", min_value=3, max_value=15, value=8, step=1)
@@ -79,7 +97,24 @@ show = pred_df.copy()
 if has_label:
     show.insert(4, "true_label", raw_df["label"].astype(str))
 
+if not show_probabilities:
+    proba_cols = [c for c in show.columns if c.startswith("proba_")]
+    if proba_cols:
+        show = show.drop(columns=proba_cols)
+
 st.dataframe(show, use_container_width=True, hide_index=True)
+
+st.subheader("Prediction summary")
+counts = pred_df["predicted_label"].value_counts().rename_axis("label").reset_index(name="count")
+st.bar_chart(counts.set_index("label")["count"], horizontal=True)
+
+if has_label:
+    st.subheader("Evaluation (uploaded labels)")
+    y_true = raw_df["label"].astype(str)
+    y_pred = pred_df["predicted_label"].astype(str)
+    macro = f1_score(y_true, y_pred, average="macro")
+    st.metric("Macro F1", value=f"{macro:.4f}")
+    st.text(classification_report(y_true, y_pred, digits=4))
 
 csv_bytes = show.to_csv(index=False).encode("utf-8")
 st.download_button(

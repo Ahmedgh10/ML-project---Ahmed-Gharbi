@@ -60,9 +60,14 @@ def predict_with_explanations(
     pipe = loaded.artifacts.pipeline
 
     preds = pipe.predict(X)
-    proba = None
+    proba: np.ndarray | None = None
+    class_labels: list[str] | None = None
     if hasattr(pipe, "predict_proba"):
         proba = pipe.predict_proba(X)
+        try:
+            class_labels = [str(c) for c in pipe.named_steps["clf"].classes_]
+        except Exception:
+            class_labels = None
 
     out = pd.DataFrame({
         "row_id": np.arange(len(raw_df), dtype=int),
@@ -75,6 +80,10 @@ def predict_with_explanations(
     if proba is not None:
         confidence = proba.max(axis=1)
         out["confidence"] = confidence
+
+        if class_labels is not None and len(class_labels) == proba.shape[1]:
+            for j, lbl in enumerate(class_labels):
+                out[f"proba_{lbl}"] = proba[:, j]
 
     explanations: dict[int, pd.DataFrame] = {}
 
