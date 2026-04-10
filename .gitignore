@@ -207,10 +207,21 @@ marimo/_lsp/
 __marimo__/
 
 # Project-specific
-artifacts/
 *.joblib
 *.pkl
 *.npy
 *.csv
+
+# Ignore all generated artifacts by default, but allow the minimal set
+# needed for Streamlit Community Cloud deployments.
+artifacts/*
+!artifacts/model.joblib
+!artifacts/normal_vectors.npy
+!artifacts/normal_explain.csv
+!artifacts/train_summary.json
+
+# Keep the raw dataset out of the repo.
+smart_system_anomaly_dataset.csv
+
 .DS_Store
 .ipynb_checkpoints/

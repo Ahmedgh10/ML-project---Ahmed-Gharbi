@@ -210,7 +210,8 @@ def save_artifacts(
     out_dir = Path(artifact_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    dump(artifacts, out_dir / "model.joblib")
+    # Compress to keep artifacts small enough for Git hosting/deployment.
+    dump(artifacts, out_dir / "model.joblib", compress=3)
 
     # Store vectors as .npy (dense) if possible; otherwise as sparse npz-ish array
     # sklearn transformers may output sparse; NearestNeighbors expects dense.

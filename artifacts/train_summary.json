@@ -1,0 +1,18 @@
+{
+  "best_model": "rf",
+  "best_macro_f1": 0.2214484679665738,
+  "models": {
+    "logreg": {
+      "macro_f1": 0.14633939070980845,
+      "report": "                   precision    recall  f1-score   support\n\n      Anomaly_DoS     0.1057    0.2814    0.1536       199\nAnomaly_Injection     0.0653    0.2832    0.1061       113\n Anomaly_Spoofing     0.0417    0.2857    0.0728        98\n           Normal     0.7767    0.1509    0.2528      1590\n\n         accuracy                         0.1780      2000\n        macro avg     0.2473    0.2503    0.1463      2000\n     weighted avg     0.6337    0.1780    0.2258      2000\n"
+    },
+    "rf": {
+      "macro_f1": 0.2214484679665738,
+      "report": "                   precision    recall  f1-score   support\n\n      Anomaly_DoS     0.0000    0.0000    0.0000       199\nAnomaly_Injection     0.0000    0.0000    0.0000       113\n Anomaly_Spoofing     0.0000    0.0000    0.0000        98\n           Normal     0.7950    1.0000    0.8858      1590\n\n         accuracy                         0.7950      2000\n        macro avg     0.1988    0.2500    0.2214      2000\n     weighted avg     0.6320    0.7950    0.7042      2000\n"
+    },
+    "hgb": {
+      "macro_f1": 0.22098214285714285,
+      "report": "                   precision    recall  f1-score   support\n\n      Anomaly_DoS     0.0000    0.0000    0.0000       199\nAnomaly_Injection     0.0000    0.0000    0.0000       113\n Anomaly_Spoofing     0.0000    0.0000    0.0000        98\n           Normal     0.7944    0.9962    0.8839      1590\n\n         accuracy                         0.7920      2000\n        macro avg     0.1986    0.2491    0.2210      2000\n     weighted avg     0.6315    0.7920    0.7027      2000\n"
+    }
+  }
+}
