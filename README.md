@@ -26,9 +26,3 @@ streamlit run app.py
 ```
 
 Upload a CSV with the same columns as the dataset (the `label` column may be missing).
-
-## Slides (soutenance)
-
-The 7–8 slide technical defense deck is in [soutenance_slides.md](soutenance_slides.md).
-
-If you use the VS Code Marp extension, you can export it to PDF/PPTX.

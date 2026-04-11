@@ -223,5 +223,8 @@ artifacts/*
 # Keep the raw dataset out of the repo.
 smart_system_anomaly_dataset.csv
 
+# Presentation (keep local for now)
+soutenance_slides.md
+
 .DS_Store
 .ipynb_checkpoints/
